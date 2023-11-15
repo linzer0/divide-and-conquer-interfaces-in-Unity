@@ -88,3 +88,6 @@ This is a feature of the **UI Toolkit**, it is necessary for our **TriangleEleme
 After that, we can easily drag it to the layout window.
 
 ![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/2.png)
+
+More details about creating custom elements can be found in the [documentation](https://docs.unity3d.com/Packages/com.unity.ui.builder@1.0/manual/uib-structuring-ui-custom-elements.html)
+
