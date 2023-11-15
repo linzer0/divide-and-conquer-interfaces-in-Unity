@@ -91,3 +91,47 @@ After that, we can easily drag it to the layout window.
 
 More details about creating custom elements can be found in the [documentation](https://docs.unity3d.com/Packages/com.unity.ui.builder@1.0/manual/uib-structuring-ui-custom-elements.html)
 
+
+That's taken care of, let's move on:
+```csharp
+public TriangleElement()
+{
+    generateVisualContent += GenerateVisualContent;
+}
+```
+
+As many of you know, the method we call the constructor is called when our object is created.
+
+Specifically for us, it subscribes to the **Action** of the parent class (the one mentioned above)
+
+What Action of the parent class?
+
+```csharp
+/// <summary>
+/// <para>
+/// Called when the VisualElement visual contents need to be (re)generated.
+/// </para>
+/// </summary>
+public Action<MeshGenerationContext> generateVisualContent { get; set; }
+```
+
+Briefly, it is activated when our **VisualElement** needs to regenerate itself, this usually happens if there were changes in the UI element (change of properties, dimensions) or if the **MarkDirtyRepaint()** method was called
+
+I will also leave a link to the [documentation](https://docs.unity3d.com/ScriptReference/UIElements.VisualElement-generateVisualContent.html)
+
+When we catch this **Aciton**, we also get **MeshGenerationContext** and thanks to it, we can additionally render geometry on the element.
+
+The method returns us a value of type - **MeshGenerationContext**, we will understand it later.
+
+Let's make a small digression and make an introduction to game engines - let's talk about Mesh.
+
+Mesh is a set of vertices, edges and polygons that define the shape and structure of an object.
+
+To create a custom element, we create this very mash, but only at the interface level and in 2D space.
+
+Next we will analyze the minimum data needed to create such an object:
+
+```csharp
+Vertex[] vertices = new Vertex[3];
+ushort[] indices = { 0, 1, 2 };
+```
