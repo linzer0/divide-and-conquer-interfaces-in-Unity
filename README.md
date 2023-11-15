@@ -1,11 +1,11 @@
 # Divide and conquer User Interface in Unity
 
-I tell you how to create custom UI elements through Mesh creation using Unity and UI Toolkit.
+I tell you how to create custom UI elements through Mesh creation using **Unity** and **UI Toolkit**.
 
 ![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/0.png)
 
 ## What do we do?
-Within the framework of this article, we will analyze the possibilities of generating custom UI elements using the UI Toolkit.
+Within the framework of this article, we will analyze the possibilities of generating custom UI elements using the **UI Toolkit**.
 
 First, we'll take a closer look at creating a triangle based on mash generation, and second - a gradient rhombus!
 
@@ -61,3 +61,30 @@ namespace CustomUI
     }
 }
 ```
+
+
+This is what the code looks like, now let's see what's what!
+
+Let's start with the base, the declaration of our class - **TriangleElement**
+
+```csharp
+public class TriangleElement : VisualElement
+{
+    ....
+}
+```
+
+To create a custom UI element, inheritance of the **VisualElement** class is used. (There are other ways, but I won't go into details right now).
+
+We will use some methods and data from the parent class, such as **contentRect** and **generateVisualElement**;
+
+Let's move on to **UxmlFactory** and displaying the element in the hierarchy:
+```csharp
+public new class UxmlFactory : UxmlFactory<TriangleElement> { };
+```
+
+This is a feature of the **UI Toolkit**, it is necessary for our **TriangleElement** to be added to the general list of UI elements.
+
+After that, we can easily drag it to the layout window.
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/2.png)
