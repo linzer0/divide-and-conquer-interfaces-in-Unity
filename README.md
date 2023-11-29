@@ -135,3 +135,99 @@ Next we will analyze the minimum data needed to create such an object:
 Vertex[] vertices = new Vertex[3];
 ushort[] indices = { 0, 1, 2 };
 ```
+
+Meet our valiant elephants, gentlemen — 'Vertices' and 'Indices'; henceforth, we'll refer to them as vertices and indices.
+
+A Vertex is an internal structure of Unity UI Toolkit, employed in rendering UI elements. The key aspect for us is:
+
+```csharp
+public struct Vertex
+{
+    ...
+    public Vector3 position; 
+    public Color32 tint; 
+    ...
+}
+```
+
+Under the hood, it utilizes Vector3 for the vertex position and Color32 (32-bit RGBA representation) for the color shade.
+
+In essence, vertices define their spatial coordinates and color.
+
+Next up are the indices, responsible for connecting the mesh vertices.
+
+The majority of game engines and 3D modeling tools employ a triangular mesh approach, where objects are comprised of triangles.
+
+Similarly, in our case, when we state that the indices array is filled – {0, 1, 2}, we imply that the output will be a triangle formed by these vertices.
+
+Hence, the minimum description of a shape involves three numbers to outline a single triangle.
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/3.png)
+
+You can read more about the anatomy of the mesh and its structure [here](https://docs.unity3d.com/2022.2/Documentation/Manual/AnatomyofaMesh.html).
+
+Moving along in the code, we've reached the body of our method, which will be invoked upon regenerating our UI element:
+
+```csharp
+void GenerateVisualContent(MeshGenerationContext mgc)
+{
+    vertices[0].tint = Color.red;
+    vertices[1].tint = Color.red;
+    vertices[2].tint = Color.red;
+}
+```
+
+Keep in mind that our vertices have a 'tint' field (vertex color), and right here is where we've defined them, setting all to red
+
+Next, we'll determine their positions (who is where):
+
+```csharp
+var leftCorner = 0f;
+var rightCorner = contentRect.width;
+var top = 0;
+var bottom = contentRect.height;
+var middleX = contentRect.width / 2;
+
+vertices[0].position = new Vector3(leftCorner, bottom, Vertex.nearZ);
+vertices[1].position = new Vector3(middleX, top, Vertex.nearZ);
+vertices[2].position = new Vector3(rightCorner, bottom, Vertex.nearZ);
+```
+
+Let's begin with the fact that the vertex position is described using the Vector3 type (where 3 represents the number of dimensions, i.e., in our case, X, Y, Z).
+
+To specify positions, we need some theoretical support:
+
+Any VisualElement has a rendering area called the [contentRect](https://docs.unity3d.com/ScriptReference/Rect.html).
+It has properties for height and width.
+
+I want to draw my triangle always in the center of this area, so that, regardless of the size of the area, my triangle is positioned in the middle.
+
+That's why I'm binding it to the size of the rendering area. If it changes, for example, due to a screen resize, it will trigger the regeneration of the entire UI element. Consequently, this method will be called again, but this time with updated contentRect dimensions.
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/4.png)
+
+Here, the origin, as you may have noticed, is located in the top-left corner – position { x = 0, y = 0 }.
+
+The region of our contentRect ends at the values { x = width, y = height }, which is logical overall. The farthest point on the X-axis is equal to the width of the element, and on the Y-axis, it's equal to the height.
+
+So, what did we end up with in terms of vertices?
+
+- Vertex with index 0 is located at coordinates { x = 0, y = height } (bottom-left corner).
+- Vertex with index 1 is located at coordinates { x = width / 2, y = 0 } (top center).
+- Vertex with index 2 is located at coordinates { x = width, y = height } (bottom-right corner).
+
+After preparing the position and color values, it's finally time to render all of this!
+
+```csharp
+MeshWriteData mwd = mgc.Allocate(vertices.Length, indices.Length);
+mwd.SetAllVertices(vertices);
+mwd.SetAllIndices(indices);
+```
+
+Here, in short, we are saying that we want to create a mesh with a certain number of vertices and a specific number of indices.
+
+Then, through the SetAllVertices() method, we define our vertices, and through SetAllIndices(), we assign our indices.
+
+And voilà! We've got ourselves a triangle:
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/5.mp)
