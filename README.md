@@ -235,3 +235,129 @@ https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/assets/1770235
 
 
 
+## Chapter 2: Diamond and Gradient!
+
+Now, after the simple triangle, let's move on to something more interesting – a diamond.
+
+We'll proceed as follows. Below is the code, and we'll provide an overview of only the important parts that have changed.
+
+```csharp
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace CustomUI
+{
+    public class RombElement : VisualElement
+    {
+        public new class UxmlFactory : UxmlFactory<RombElement> { }
+        
+        public RombElement()
+        {
+            generateVisualContent += GenerateVisualContent;
+        }
+
+        Vertex[] vertices = new Vertex[4];
+        ushort[] indices = { 0, 1, 2, 2, 3, 0};
+
+        void GenerateVisualContent(MeshGenerationContext mgc)
+        {
+            vertices[0].tint = new Color32(255, 0, 0, 255);
+            vertices[1].tint = new Color32(0, 255, 0, 255);
+            vertices[2].tint = new Color32(0, 0, 255, 255);
+            vertices[3].tint = new Color32(17, 55, 55, 255);
+
+            var top = 0;
+            var left = 0f;
+            var middleX = contentRect.width / 2;
+            var middleY = contentRect.height / 2;
+            var right = contentRect.width;
+            var bottom = contentRect.height;
+
+            vertices[0].position = new Vector3(left, middleY, Vertex.nearZ);
+            vertices[1].position = new Vector3(middleX, top, Vertex.nearZ);
+            vertices[2].position = new Vector3(right, middleY, Vertex.nearZ);
+            vertices[3].position = new Vector3(middleX, bottom, Vertex.nearZ);
+
+            MeshWriteData mwd = mgc.Allocate(vertices.Length, indices.Length);
+            mwd.SetAllVertices(vertices);
+            mwd.SetAllIndices(indices);
+        }
+    }
+}
+```
+
+As you can see, our vertices and indices have changed. 
+
+Now, we have 4 vertices, which is precisely what we need to create a rectangle, as we recall from geometry lessons.
+
+```csharp
+Vertex[] vertices = new Vertex[4];
+ushort[] indices = { 0, 1, 2, 2, 3, 0};
+```
+
+Now, let's delve into the indices!
+
+Let's break down the indices into triplets, resulting in {0, 1, 2} and {2, 3, 0}.
+
+Now, let's illustrate our vertices and indices.
+
+![For the first triplet, we use a dashed red line, and for the second one – blue.](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/6.png)
+
+When it comes to the vertex positions, there's nothing new or complex there; it's as straightforward as it gets.
+
+But what's interesting is the gradient and vertex colors!
+
+For the triangle, all vertices had the value of Color.red. We can express this in the RGBA representation, and it would look like this:
+
+```csharp
+var redColor = new Color32(255, 0, 0, 255);
+```
+
+Yes, we can pass any color values and shades that can be described using RGBA.
+
+But how do we create a gradient then? To answer that, let's address the question – what is this gradient of yours?
+
+A gradient in computer graphics is a type of fill that, based on specified color parameters at key points, calculates intermediate colors for other points.
+
+There are various types of gradients: radial, angular, reflected.
+
+We'll be creating a linear gradient, and it looks like this
+
+![](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/6.png)
+
+Now, let's get back to our business and break down our vertices and colors:
+
+```csharp
+vertices[0].tint = new Color32(255, 0, 0, 255); // Red
+vertices[1].tint = new Color32(0, 255, 0, 255); // Green 
+vertices[2].tint = new Color32(0, 0, 255, 255); // Blue 
+vertices[3].tint = new Color32(17, 55, 55, 255); // Dark-green 
+```
+Here's how the UI element will look like:
+![](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/7.png)
+
+Each vertex is colored in its own shade, and as we transition to another vertex, color blending occurs, resulting in the desired gradient.
+
+However, there's a small nuance – a difference in colors between UI Builder and Runtime. I'll demonstrate that now:
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/8.png)
+
+This issue arises from the fact that different color spaces are used in Runtime and UI Builder.
+
+This becomes especially noticeable during color blending, as in our gradient.
+
+I found confirmations of this on Unity forums:
+
+- [Colors do not match ui builder](https://forum.unity.com/threads/colors-do-not-match-ui-builder-uss-variables.1420835/)
+- [UI Builder doesn’t support linear color space](https://forum.unity.com/threads/ui-builder-doesnt-support-linear-color-space-and-ui-toolkit-too.1235737/)
+- [UIElements Runtime with different color spaces](https://forum.unity.com/threads/uielements-runtime-with-different-color-spaces.823395/)
+
+What can be done, or will our gradient have this nuance?
+
+By default, after creating a project, the [Linear color space](https://docs.unity3d.com/Manual/LinearRendering-LinearOrGammaWorkflow.html) is used.
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/9.png)
+
+If you switch to Gamma, everything will fall into place, and it will come to life with new colors:
+
+![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/10.png)
