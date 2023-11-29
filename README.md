@@ -119,7 +119,7 @@ Briefly, it is activated when our **VisualElement** needs to regenerate itself, 
 
 I will also leave a link to the [documentation](https://docs.unity3d.com/ScriptReference/UIElements.VisualElement-generateVisualContent.html)
 
-When we catch this **Aciton**, we also get **MeshGenerationContext** and thanks to it, we can additionally render geometry on the element.
+When we catch this **Action**, we also get **MeshGenerationContext** and thanks to it, we can additionally render geometry on the element.
 
 The method returns us a value of type - **MeshGenerationContext**, we will understand it later.
 
@@ -349,7 +349,7 @@ This becomes especially noticeable during color blending, as in our gradient.
 I found confirmations of this on Unity forums:
 
 - [Colors do not match ui builder](https://forum.unity.com/threads/colors-do-not-match-ui-builder-uss-variables.1420835/)
-- [UI Builder doesn’t support linear color space](https://forum.unity.com/threads/ui-builder-doesnt-support-linear-color-space-and-ui-toolkit-too.1235737/)
+- [UI Builder does not support linear color space](https://forum.unity.com/threads/ui-builder-doesnt-support-linear-color-space-and-ui-toolkit-too.1235737/)
 - [UIElements Runtime with different color spaces](https://forum.unity.com/threads/uielements-runtime-with-different-color-spaces.823395/)
 
 What can be done, or will our gradient have this nuance?
