@@ -230,4 +230,4 @@ Then, through the SetAllVertices() method, we define our vertices, and through S
 
 And voilà! We've got ourselves a triangle:
 
-![alt](https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/5.mp4)
+https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/5.mov
