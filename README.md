@@ -230,4 +230,8 @@ Then, through the SetAllVertices() method, we define our vertices, and through S
 
 And voilà! We've got ourselves a triangle:
 
-https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/blob/main/ReadmeResouces/5.mov
+
+https://github.com/linzer0/divide-and-conquer-interfaces-in-Unity/assets/17702351/78da6db0-00d8-4e0c-b09f-85f6778732b2
+
+
+
